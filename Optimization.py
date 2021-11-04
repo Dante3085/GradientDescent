@@ -28,6 +28,8 @@ class GradientDescent:
         self.precision = precision
 
     def __calc_gradient(self, func, funcArgs):
+        """Returns the gradient for the given function."""
+
         argSymbols = []
         for argName in funcArgs:
             argSymbols.append(Symbol(argName))
@@ -40,6 +42,10 @@ class GradientDescent:
         return gradient
 
     def gradient_descent(self):
+        """
+        Executes Gradient Descent on the given function.
+        """
+
         previousValue = None
         currentValue = self.startValue
 
@@ -47,24 +53,34 @@ class GradientDescent:
             while previousValue is None or previousValue != currentValue:
                 previousValue = currentValue
                 currentValue = self.__descent(currentValue)
-                self.stepSize = self.__update_stepSize(self.stepSize, currentValue, previousValue)
+                self.stepSize = self.__calc_stepSize(self.stepSize, currentValue, previousValue)
                 print("currentValue: " + str(currentValue) + ", stepSize: " + str(self.stepSize))
         else:
             while previousValue is None or vector_distance(previousValue, currentValue) > self.precision:
                 previousValue = currentValue
                 currentValue = self.__descent(currentValue)
-                self.stepSize = self.__update_stepSize(self.stepSize, currentValue, previousValue)
+                self.stepSize = self.__calc_stepSize(self.stepSize, currentValue, previousValue)
                 print("currentValue: " + str(currentValue) + ", stepSize: " + str(self.stepSize))
 
         return currentValue
 
     def __descent(self, currentValue):
+        """
+        Executes one step of the Gradient Descent algorithm according to the following formula:
+        x^(n+1) = x^(n) - stepSize * gradient(x^(n)).
+        """
+
         returnValue = []
         for i in range(0, len(currentValue)):
             returnValue.append(currentValue[i] - self.stepSize * self.gradient[i](*currentValue))
         return returnValue
 
-    def __update_stepSize(self, currentStepSize, currentValue, previousValue):
+    def __calc_stepSize(self, currentStepSize, currentValue, previousValue):
+        """
+        For every new currentValue x^(n+1) in the Gradient Descent algorithm, a new stepSize can be calculated
+        according to the following formula:
+        v = gradient(x^n) - gradient(x^(n-1)); stepSize^(n+1) = ( |(x^n - x^(n-1)) * v| ) / ||v||^2
+        """
 
         # The calculations below will not work if currentValue is the same as previousValue.
         # So we just return the currentStepSize.
@@ -79,6 +95,11 @@ class GradientDescent:
         return (abs(scalar_product(v, v2))) / denominator
 
     def gradient_at(self, arg):
+        """
+        Returns the value of the gradient at the given argument 'arg'. Reminder: The gradient is a vector of
+        multi-variable functions.
+        """
+
         returnValue = []
         for i in range(0, len(arg)):
             returnValue.append(self.gradient[i](*arg))
