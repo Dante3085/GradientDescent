@@ -1,6 +1,6 @@
 
 from sympy import *
-import numpy
+from lina import *
 
 class GradientDescent:
     def __init__(self, func, funcArgs, startValue, stepSize, precision=0.01):
@@ -50,7 +50,7 @@ class GradientDescent:
                 self.stepSize = self.__update_stepSize(self.stepSize, currentValue, previousValue)
                 print("currentValue: " + str(currentValue) + ", stepSize: " + str(self.stepSize))
         else:
-            while previousValue is None or self.vector_distance(previousValue, currentValue) > self.precision:
+            while previousValue is None or vector_distance(previousValue, currentValue) > self.precision:
                 previousValue = currentValue
                 currentValue = self.__descent(currentValue)
                 self.stepSize = self.__update_stepSize(self.stepSize, currentValue, previousValue)
@@ -58,7 +58,6 @@ class GradientDescent:
 
         return currentValue
 
-    # Da Funktionen mit mehreren Variablen erlaubt sind, muss standardmäßig mit Vektoren gerechnet werden.
     def __descent(self, currentValue):
         returnValue = []
         for i in range(0, len(currentValue)):
@@ -69,46 +68,18 @@ class GradientDescent:
 
         # The calculations below will not work if currentValue is the same as previousValue.
         # So we just return the currentStepSize.
-        if self.vector_equals(currentValue, previousValue):
+        if vector_equals(currentValue, previousValue):
             return currentStepSize
 
-        v = self.vector_sub(self.gradient_at(currentValue), self.gradient_at(previousValue))
-        denominator = (pow(self.vector_length(v), 2))
+        v = vector_sub(self.gradient_at(currentValue), self.gradient_at(previousValue))
+        denominator = (pow(vector_length(v), 2))
 
-        v2 = self.vector_sub(currentValue, previousValue)
+        v2 = vector_sub(currentValue, previousValue)
 
-        return (abs(self.scalar_product(v, v2))) / denominator
+        return (abs(scalar_product(v, v2))) / denominator
 
     def gradient_at(self, arg):
         returnValue = []
         for i in range(0, len(arg)):
             returnValue.append(self.gradient[i](*arg))
         return returnValue
-
-    def vector_distance(self, v1, v2):
-        return abs(self.vector_length(v1) - self.vector_length(v2))
-
-    def scalar_product(self, a, b):
-        returnValue = 0
-        for i in range(0, len(a)):
-            returnValue += a[i] * b[i]
-        return returnValue
-
-    def vector_sub(self, a, b):
-        result = []
-        for i in range(0, len(a)):
-            result.append(a[i] - b[i])
-        return result
-
-    def vector_length(self, v):
-        length = 0
-        for e in v:
-            length += pow(e, 2)
-        length = pow(length, 0.5)
-        return length
-
-    def vector_equals(self, a, b):
-        for i in range(0, len(a)):
-            if a[i] != b[i]:
-                return False
-        return True

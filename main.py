@@ -35,8 +35,6 @@ import math
 # gradient(f(x)) = ()^T
 
 # TODO: Symbole aus func Argument extrahieren und funcArgs Argument entfernen.
-# TODO: Nach numpy array umstellen, um Vektorberechnungen zu vereinfachen.
-# TODO: Vektor utilities in separates Modul verlagern.
 # TODO: Auch Maxima. Falls Funktion kein Minimum und nur Maximum hat, explodieren die Zahlen aktuell einfach.
 #       Lösung wäre das Vorzeichen von n*(Gradient(currentValue)) für Minima(-) und Maxima(+)
 #       dynamisch anzupassen. Dann heiß das ganze aber nicht mehr Gradient "Descent", sondern
